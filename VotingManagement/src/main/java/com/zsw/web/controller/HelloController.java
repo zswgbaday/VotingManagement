@@ -41,4 +41,10 @@ public class HelloController {
          return list;
     }
 
+    @RequestMapping("anno-test")
+    @ResponseBody
+    public String annoTest(){
+        return "";
+    }
+
 }

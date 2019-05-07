@@ -1,6 +1,8 @@
-package com.zsw.pojo;
+package com.zsw.pojo.user;
 
-public class Admin {
+import com.zsw.pojo.user.base.BaseUser;
+
+public class Admin extends BaseUser {
     private String ano;
     private String aname;
     private String apassword;
