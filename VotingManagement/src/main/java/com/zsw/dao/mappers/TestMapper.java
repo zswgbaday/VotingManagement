@@ -1,6 +1,6 @@
 package com.zsw.dao.mappers;
 
-import com.zsw.pojo.Admin;
+import com.zsw.pojo.user.Admin;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;

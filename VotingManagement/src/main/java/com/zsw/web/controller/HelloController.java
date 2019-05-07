@@ -1,7 +1,7 @@
 package com.zsw.web.controller;
 
 import com.zsw.dao.mappers.TestMapper;
-import com.zsw.pojo.Admin;
+import com.zsw.pojo.user.Admin;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
