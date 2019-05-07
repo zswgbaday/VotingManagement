@@ -1,31 +1,28 @@
 package com.zsw.web.controller;
 
-import com.zsw.dao.mappers.TestMapper;
+import com.zsw.dao.mappers.HelloMapper;
+import com.zsw.pojo.Hello;
 import com.zsw.pojo.user.Admin;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 @Controller
+@RequestMapping("/")
 public class HelloController {
 
+    private HelloMapper helloMapper;
 
-    @Resource
-    private TestMapper testMapper;
-
-    public void setTestMapper(TestMapper testMapper) {
-        this.testMapper = testMapper;
+    /**
+     * 构造器注入
+     */
+    @Autowired
+    public HelloController(HelloMapper helloMapper){
+        this.helloMapper = helloMapper;
     }
-    //构造器注入
-//    public HelloController(TestMapper testMapper){
-//        this.testMapper = testMapper;
-//    }
 
 
     @RequestMapping("hello")
@@ -36,8 +33,8 @@ public class HelloController {
 
     @RequestMapping("first-select")
     @ResponseBody
-    public List<Admin> firstSelect(){
-         List<Admin> list = testMapper.selectAll();
+    public List<Hello> firstSelect(){
+         List<Hello> list = helloMapper.selectAll();
          return list;
     }
 
