@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zsw.dao.mappers.ResourcesMapper">
+    
+    <resultMap id="resourcesResultMap" type="com.zsw.pojo.role.Resources" >
+        <id column="id" property="id" jdbcType="NUMERIC" javaType="Integer" ></id>
+        <result column="name"  property="name" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="url" property="url" jdbcType="VARCHAR" javaType="String" ></result>
+        <result column="status" property="status" typeHandler="com.zsw.dao.typehandler.ResourcesStatuTypeHandler"></result>
+        <result column="icon" property="icon" javaType="String" jdbcType="VARCHAR"></result>
+    </resultMap>
+    
+    <sql id="resourcesCol">
+        id, name, url, status, icon
+    </sql>
+
+    <select id="findResourcesByRoleId" resultMap="resourcesResultMap">
+        select
+        <include refid="resourcesCol"/>
+        from v_relation_role_res relation inner join v_resources res on relation.res_id = res.id
+        where relation.role_id = #{roleId}
+    </select>
+
+    <select id="findResourcesByRoleIds" resultMap="resourcesResultMap">
+        select
+        <include refid="resourcesCol"/>
+        from v_relation_role_res relation inner join v_resources res on relation.res_id = res.id
+        where relation.role_id in 
+        <foreach collection="roleIds" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+    
+    <select id="findAllResources" resultMap="resourcesResultMap" >
+        select * from v_resources 
+    </select>
+
+
+
+</mapper>

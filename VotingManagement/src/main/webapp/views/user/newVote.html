@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>新建投票</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/js/jquery-3.4.1.js"></script>
+    <script src="/js/js/angular.min.js"></script>
+    <script src="/js/common/common.js"></script>
+    <!--呆呆-->
+    <link rel="stylesheet" type="text/css" href="/css/base.css">
+    <link rel="stylesheet" type="text/css" href="/css/help.css">
+    <link id="window_resizer_tooltip_styles" rel="stylesheet" type="text/css" href="/css/resize-tooltip.css">
+    <!--日期组件-->
+    <link href="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css"
+          rel="stylesheet">
+    <script src="http://momentjs.com/downloads/moment-with-locales.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+    <!--弹框 && 普通bootstrap-->
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="http://cdn.bootcss.com/angular-ui-bootstrap/1.1.2/ui-bootstrap-tpls.js"></script>
+    <!--此页面配套的js-->
+    <script src="newVoteController.js"></script>
+    <style>
+        body {
+            background: #f3f3f3;
+        }
+
+        .bzzx_nav_list li a {
+            padding-left: 30px;
+        }
+
+        .row {
+            margin-bottom: 10px;
+        }
+
+        .col-md-2 {
+            padding: 0;
+            text-align: left;
+            width: 13%;
+            /*line-height: 48px;*/
+        }
+
+        .col-md-5 {
+            width: 45%;
+            margin-bottom: 10px;
+        }
+
+        .col-md-6, .col-md-10, .col-md-5 {
+            width: 60%;
+        }
+
+        .col-md-offset-4 {
+            margin-left: 37%;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /*	.no-border {
+                border: 1px !important;
+            }*/
+    </style>
+</head>
+
+<body ng-app="VotingApp" ng-controller="newVoteController" style="padding-top:50px">
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="javascript:void(0)" onclick="location.href='/views/index/index.html'"><strong>首页</strong></a>
+        </div>
+        <div class="navbar-header">
+            <a class="navbar-brand" href="javascript:void(0)" onclick="location.reload()">个人空间</a>
+        </div>
+        <div>
+            <ul class="nav navbar-nav">
+                <li ><a href="/views/user/info/showUser.html">个人信息</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        投票管理
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/views/user/home.html">查看历史投票</a></li>
+                        <li><a href="/views/user/newVote.html">新增个人投票</a></li>
+                        <li><a href="/views/user/home.html">查看个人投票</a></li>
+                        <li><a href="#">分离的链接</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#" ng-click="">点击</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="w_1200 fw_box ">
+    <div class="left_nav">
+        <ul class="bzzx_nav_list">
+            <li><a href="/views/user/home.html" class="icon_1" style="text-decoration:none;">个人空间</a></li>
+            <li><a href="/views/user/home.html" class="icon_3" style="text-decoration:none;"> 查看历史投票</a></li>
+            <li class="on"><a href="/views/user/newVote.html" class="icon_4" style="text-decoration:none;"> 新增个人投票</a></li>
+            <li><a href="/views/user/info/showUser.html" class="icon_5" style="text-decoration:none;"> 查看个人信息</a></li>
+            <li><a href="/views/user/info/editUser.html" class="icon_5" style="text-decoration:none;"> 编辑个人信息</a></li>
+            <li><a href="/views/user/info/editUserPhoto.html" class="icon_5" style="text-decoration:none;"> 上传个人头像</a></li>
+            <!-- <li> <a href="#" class="icon_6"> 广告服务</a> </li>
+            <li> <a href="#" class="icon_7"> 展位预定</a> </li> -->
+        </ul>
+    </div>
+    <div class="fw_conent" style="float: left">
+
+        <div class="bzzx_bt"><strong>新建个人投票</strong>用户可以对投票进行<span>创建、查看、编辑</span>等管理</div>
+
+        <div class="container-fluid text-center">
+            <!--标题-->
+            <div class="row">
+                <div class="col-md-2">问题标题</div>
+                <div class="col-md-5 ">
+                    <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty"
+                           placeholder="请输入投票的标题" ng-model="questions.voteContent.title">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">具体描述</div>
+                <div class="col-md-5">
+                    <textarea class="form-control ng-pristine ng-untouched ng-valid ng-empty" rows="3"
+                              placeholder="请输入此投票的具体描述" ng-model="questions.voteContent.describe"
+                              style="overflow-x:hidden"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">图片描述</div>
+                <div class="col-md-5">
+                    <form action="/user/upload" method="POST" enctype="multipart/form-data">
+                        <input type="file" id="voteImage" name="photo" accept="image/*" file-model="images"/>
+                        <!--<input type="submit"/>-->
+                       </form>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">截至投票日期</div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <!-- <label>选择日期：</label> -->
+                        <!--指定 date标记-->
+                        <div class="input-group date" id="datetimepicker1">
+                            <input type="text" id="datetimepickerInput" class="form-control">
+                            <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+                        </div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                    $(function () {
+                        $('#datetimepicker1').datetimepicker({
+                            format: 'YYYY-MM-DD',
+                            locale: moment.locale('zh-cn'),
+                            defaultDate: moment().format("YYYY-MM-DD HH:mm:ss")
+                        });
+                    });
+
+                    function getStopTime() {
+                        var aa = $("#datetimepickerInput").val();
+                        return $("#datetimepickerInput").val();
+                    }
+
+                    /*4.17版本一些可能用得到的方法参数*/
+                    /*
+                            showClose:true	//是否显示关闭 按钮
+                            /*viewMode: 'days',//天数模块展示，months则为以月展示
+                            daysOfWeekDisabled: false,//星期几 禁止选择,参数 [num],多个逗号隔开
+                            calendarWeeks: false,	//显示 周 是 今年第几周
+                            toolbarPlacement:'default', //工具摆放的位置，top 则为上，默认为底
+                            showTodayButton:false,	//是否工具栏 显示 直达今天天数的 按钮，默认false
+                            showClear:false, //是否 工具栏显示  清空 输入框  的按钮。默认false
+                    */
+                </script>
+            </div>
+            <div class="row">
+                <div class="col-md-2"><strong>问题类型</strong></div>
+                <div class="col-md-10">
+                    <select class="form-control ng-pristine ng-untouched ng-valid ng-empty"
+                            ng-model="questions.voteContent.type" ng-init="questions.voteContent.type=answerType[0]"
+                            ng-options="tValue.type as tValue.name for (tName, tValue) in answerType">
+                        <option value="?" selected="selected"></option>
+                        <option label="单选" value="string:radio">单选</option>
+                        <option label="多选" value="string:multiple">多选</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">问题选项</div>
+                <div class="col-md-5">
+                    <ul class="list-group mt-3">
+                        <!--  form-inline 位於一行-->
+                        <li class="list-group-item no-border p-0 m-1" ng-repeat="v in questions.voteContent.options">
+                            <input type="text" class="form-control"
+                                   ng-model="v.optionDescribe" placeholder="请输入选项描述">
+                        </li>
+                    </ul>
+                    <div>
+                        <button class="btn b-a-green" ng-click="addAnswerInput()">添加答案项</button>
+                        <button class="btn b-a-green" ng-click="subAnswerInput()">减少答案项</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-offset-4">
+                    <button class="btn btn-save" ng-click="toSaveVote()">提交</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="gmxz_tip">
+            <p style="font-size:14px ;color:#333">新增投票须知：</p>
+            <p>1.歡迎來到投票管理系統，投票发布后您將只能編輯投票狀態和投票截止時間。</p>
+            <p> 2.任何意外请联系管理员：zswgbaday@163.com。</p>
+        </div>
+
+    </div>
+</div>
+
+
+<div id="window_resizer_tooltip_wrapper" data-pos-y="center" data-pos-x="right" class=""
+     style="transform: scale(1) translateY(134px) translateX(1240px);">
+
+</div>
+</body>
+
+
+</body>
+</html>

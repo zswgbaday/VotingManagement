@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>个人空间</title>
+    <!--基本-->
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/js/jquery-3.4.1.js"></script>
+    <script src="/js/js/angular.min.js"></script>
+    <script src="/js/common/common.js"></script>
+    <!--基本的bootstrap-->
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="http://cdn.bootcss.com/angular-ui-bootstrap/1.1.2/ui-bootstrap-tpls.js"></script>
+    <!--echarts-->
+    <script src="/js/js/echarts.js" ></script>
+    <!--此页面配套的js-->
+    <script src="showVoteController.js"></script>
+</head>
+<body ng-app="VotingApp" ng-controller="showVoteController">
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="javascript:void(0)" onclick="location.reload()">个人空间</a>
+        </div>
+        <div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/views/user/info/showUser.html">个人信息</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        投票管理
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/views/user/home.html">查看历史投票</a></li>
+                        <li><a href="/views/user/newVote.html">新增个人投票</a></li>
+                        <li><a href="/views/user/home.html">查看个人投票</a></li>
+                        <li><a href="#">分离的链接</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#" ng-click="">点击</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!--正文-->
+<div class="condition-fluid">
+    <div class="row-fluid">
+        <!--投票信息显示-->
+        <div class="col-md-6">
+            <h3>投票</h3>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <strong>投票标题</strong>
+                    <div class="pull-right">{{vote.voteContent.title}}</div>
+                </li>
+                <li class="list-group-item">
+                    <strong>投票描述</strong>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            {{vote.voteContent.describe}}
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <strong>投票状态</strong>
+                    <div class="pull-right">
+                        <p ng-show="vote.status == 'ACTIVE'">开启<span class="glyphicon glyphicon-ok"></span></p>
+                        <p ng-show="vote.status != 'ACTIVE'">关闭<span class="glyphicon glyphicon-remove"></span></p>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <strong>截止时间</strong>
+                    <div class="pull-right">{{vote.stopTime | date:'yyyy-MM-dd HH:mm:ss'}}</div>
+                </li>
+                <li class="list-group-item">
+                    <strong>创建时间</strong>
+                    <div class="pull-right">{{vote.createTime | date:'yyyy-MM-dd HH:mm:ss'}}</div>
+                </li>
+                <li class="list-group-item">
+                    <strong>投票选项</strong>
+                    <span class="badge">{{vote.voteContent.options.length}}</span>
+                    <div class="panel panel-default ml-5">
+                        <div class="panel-body">
+                            <ul class="list-group">
+                                <li lass="list-group-item" ng-repeat="option in vote.voteContent.options">
+                                    {{option.optionDescribe}}
+                                    <span class="badge">{{option.count}}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <!--投票结果展示-->
+        <div class="col-md-6">
+            <!--<div>-->
+                <!--<donut-chart config="donutConfig" data="dataList.incomeData">-->
+                <!--</donut-chart>-->
+            <!--</div>-->
+            <button class="btn btn-save" ng-click="changeChat()">切换图表</button>
+            <div id="e-main" style="height: 400px"></div>
+
+        </div>
+    </div>
+</div>
+<!--正文end-->
+</body>
+</html>

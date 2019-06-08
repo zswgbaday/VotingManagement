@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zsw.dao.mappers.UserMapper">
+
+    <resultMap id="userResultMap" type="com.zsw.pojo.user.User">
+        <id column="id" property="id" jdbcType="VARCHAR" javaType="String"></id>
+        <result column="name" property="name" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="password" property="password" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="phone" property="phone" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="age" property="age" jdbcType="NUMERIC" javaType="Integer"></result>
+        <result column="address" property="address" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="email" property="email" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" javaType="java.sql.Timestamp"></result>
+        <result column="photo" property="photo" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler"></result>
+    </resultMap>
+    
+    <sql id="userCol" >
+        id, name, password, phone, age, address, email, create_time
+    </sql>
+    
+    <select id="getUserById" parameterType="String" resultMap="userResultMap" >
+        select <include refid="userCol"/> from v_user where id = #{id}
+    </select>
+    
+    <select id="selectAllUser" resultMap="userResultMap">
+        select 
+        <include refid="userCol"></include>
+        from v_user
+    </select>
+    
+    <select id="getUserListByUsername" resultMap="userResultMap">
+        select
+        <include refid="userCol"></include>
+        from v_user
+        where name like '%${username}%'
+    </select>
+
+    <select id="getUserByEmail" resultMap="userResultMap">
+        select
+        <include refid="userCol"></include>
+        from v_user
+        where email = #{loginEmail}
+    </select>
+    
+    <select id="selectUsersWithRule" parameterType="hashmap" resultMap="userResultMap" >
+        select 
+        <include refid="userCol" />
+        from v_user
+        where 1=1
+        limit #{offset},#{size}
+    </select>
+    
+    <insert id="insertNewUser" parameterType="com.zsw.pojo.user.User" flushCache="true">
+        insert into v_user(
+            id, name, password, phone, age, address, email
+        ) values (#{id}, #{name}, #{password}, #{phone,jdbcType=VARCHAR}, #{age,jdbcType=NUMERIC}, #{address, jdbcType=VARCHAR}, #{email} )
+    </insert>
+    
+    <update id="updateUserById" parameterType="com.zsw.pojo.user.User" flushCache="true" >
+        update v_user set email = #{email}, name = #{name},
+                          <if test="password != null" >
+                            password = #{password},
+                          </if>
+                          phone = #{phone, jdbcType=VARCHAR},
+                          age = #{age, jdbcType=NUMERIC}, address = #{address, jdbcType=VARCHAR}
+        where id = #{id}
+    </update>
+    
+    <update id="setPhotoById">
+        update v_user set photo = #{photo, jdbcType=BLOB} where id = #{id}
+    </update>
+    
+    
+    <select id="getPhotoById"  resultMap="userResultMap">
+        select <include refid="userCol" /> , photo from v_user where id = #{id}
+    </select>
+    
+    <delete id="deleteUserById" parameterType="String" flushCache="true" >
+        delete from v_user where id = #{userId}
+    </delete>
+</mapper>
+
+<!--
+statementType=”STATEMENT”
+取值说明： 
+1、STATEMENT:直接操作sql，不进行预编译，获取数据：$—Statement 
+2、PREPARED:预处理，参数，进行预编译，获取数据：#—–PreparedStatement:默认 
+3、CALLABLE:执行存储过程————CallableStatement 
+
+
+
+-->

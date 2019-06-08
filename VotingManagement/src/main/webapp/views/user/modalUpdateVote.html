@@ -1,0 +1,72 @@
+<div class="container-fluid m-5">
+    <div class="row">
+        <div class="col-md-4 "><span class="font-size-9 ">编辑投票</span></div>
+        <!--<div class="col-md-10 "><span class="font-size-9">您的到来</span></div>-->
+    </div>
+    <!--内容-->
+    <div class="row mt-2 mb-2" style="min-height: 100px">
+        <!--<div class="col-md-8 col-md-offset-2">-->
+            <!--<span class="font-size-5">{{msg}}</span>-->
+        <!--</div>-->
+        <ul class="list-group">
+            <li class="list-group-item">
+                <strong>投票标题</strong>
+                <input type="text" ng-model="vote.voteContent.title"/>
+            </li>
+            <li class="list-group-item">
+                <strong>投票描述</strong>
+                <textarea class="form-control" rows="5" ng-model="vote.voteContent.describe"></textarea>
+            </li>
+            </li>
+            <li class="list-group-item ">
+                <strong>投票状态</strong>
+                <div class="radio">
+                    <label>
+                        <input type="radio" value="ACTIVE" name="optionsRadios" ng-model="vote.status">
+                        <span class="glyphicon glyphicon-ok"></span>
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" value="DISABLE" name="optionsRadios" ng-model="vote.status">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </label>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <strong>截止时间</strong>
+                <div class='input-group date' id='datetimepicker1'>
+                    <input type='text' id="datetimepickerInput" class="form-control" />
+                    <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+                </div>
+                <script type="text/javascript">
+                    $(function () {
+                        $('#datetimepicker1').datetimepicker({
+                            format: 'YYYY-MM-DD',
+                            locale: moment.locale('zh-cn'),
+                            defaultDate: moment().format("YYYY-MM-DD HH:mm:ss")
+                        });
+                    });
+                    function getStopTime() {
+                        var aa = $("#datetimepickerInput").val();
+                        return $("#datetimepickerInput").val();
+                    }
+                    function setStopTime(value) {
+                        $("#datetimepickerInput").val(value);
+                    }
+                </script>
+            </li>
+        </ul>
+    </div>
+    <!--底部按钮-->
+    <div class="row">
+        <div class="col-md-4 ">
+            <button class="btn btn-primary grid-width-100"  ng-click="ok()">OK</button>
+        </div>
+        <div class="col-md-4">
+            <button class="btn btn-default grid-width-100" ng-click="cancel()">CANCEL</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>个人空间</title>
+    <!--基本-->
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/js/jquery-3.4.1.js"></script>
+    <script src="/js/js/angular.min.js"></script>
+    <script src="/js/common/common.js"></script>
+    <!--呆呆-->
+    <link rel="stylesheet" type="text/css" href="/css/base.css">
+    <link rel="stylesheet" type="text/css" href="/css/help.css">
+    <link id="window_resizer_tooltip_styles" rel="stylesheet" type="text/css" href="/css/resize-tooltip.css">
+    <!--基本的bootstrap-->
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="http://cdn.bootcss.com/angular-ui-bootstrap/1.1.2/ui-bootstrap-tpls.js"></script>
+    <!--日期组件-->
+    <link href="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <script src="http://momentjs.com/downloads/moment-with-locales.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+    <!--此页面配套的js-->
+    <script src="homeController.js"></script>
+    <style>
+        body {
+            background: #f3f3f3;
+        }
+
+        .bzzx_nav_list li a {
+            padding-left: 30px;
+        }
+
+        .row {
+            margin-bottom: 10px;
+        }
+
+        .col-md-2 {
+            padding: 0;
+            text-align: left;
+            width: 13%;
+            /*line-height: 48px;*/
+        }
+
+        .col-md-5 {
+            width: 45%;
+            margin-bottom: 10px;
+        }
+
+        .col-md-6, .col-md-10, .col-md-5 {
+            width: 60%;
+        }
+
+        .col-md-offset-4 {
+            margin-left: 37%;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /*	.no-border {
+                border: 1px !important;
+            }*/
+    </style>
+</head>
+<body ng-app="VotingApp" ng-controller="homeController" style="padding-top:50px">
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="javascript:void(0)" onclick="location.href='/views/index/index.html'"><strong>首页</strong></a>
+        </div>
+        <div class="navbar-header">
+            <a class="navbar-brand" href="javascript:void(0)" onclick="location.reload()">个人空间</a>
+        </div>
+        <div>
+            <ul class="nav navbar-nav">
+                <!--class="active"-->
+                <li ><a href="/views/user/info/showUser.html">个人信息</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        投票管理
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/views/user/home.html">查看历史投票</a></li>
+                        <li><a href="/views/user/newVote.html">新增个人投票</a></li>
+                        <li class="divider"></li>
+                        <li><a href="/views/user/info/showUser.html">查看个人信息</a></li>
+                        <li><a href="/views/user/info/editUser.html">编辑个人信息</a></li>
+                        <li><a href="/views/user/info/editUserPhoto.html">上传个人头像</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="navbar-header pull-right" style="margin: 15px 50px 15px 50px">
+            <div class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <strong>欢迎{{user.name}}</strong>
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu" style="min-width: 50px;" >
+                    <li><a href="/logout">登出</a></li>
+                </ul>
+            </div>
+            
+        </div>
+    </div>
+</nav>
+
+<div class="w_1200 fw_box ">
+    <div class="left_nav">
+        <ul class="bzzx_nav_list">
+            <li><a href="/views/user/home.html" class="icon_1" style="text-decoration:none;">个人空间</a></li>
+            <li class="on"><a href="/views/user/home.html" class="icon_3" style="text-decoration:none;"> 查看历史投票</a></li>
+            <li><a href="/views/user/newVote.html" class="icon_4" style="text-decoration:none;"> 新增个人投票</a></li>
+            <li><a href="/views/user/info/showUser.html" class="icon_5" style="text-decoration:none;"> 查看个人信息</a></li>
+            <li><a href="/views/user/info/editUser.html" class="icon_5" style="text-decoration:none;"> 编辑个人信息</a></li>
+            <li><a href="/views/user/info/editUserPhoto.html" class="icon_5" style="text-decoration:none;"> 上传个人头像</a></li>
+            <!-- <li> <a href="#" class="icon_6"> 广告服务</a> </li>
+            <li> <a href="#" class="icon_7"> 展位预定</a> </li> -->
+        </ul>
+    </div>
+    <div class="fw_conent" style="float: left">
+        <div class="bzzx_bt"><strong>查看您的历史投票</strong> 您可以对这些投票进行<span>创建、查看、编辑</span>等管理</div>
+        <div>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>标题</th>
+                    <th>状态</th>
+                    <th>截至时间</th>
+                    <th>类型</th>
+                    <th>创建时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="vote in voteArrays">
+                    <td>{{vote.voteContent.title}}</td>
+                    <td>{{vote.status}}</td>
+                    <td>{{vote.stopTime   | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                    <td>{{answerType[vote.voteContent.type].name}}</td>
+                    <td>{{vote.createTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                    <td>
+                        <button class="to-transparent" ng-click="showBtn(vote.id)" data-toggle="tooltip" title="查看投票">
+                            <i class="glyphicon glyphicon-eye-open"></i>
+                        </button>
+                        <button class="to-transparent" ng-click="updateBtn(vote.id)" data-toggle="tooltip" title="修改投票">
+                            <i class="glyphicon glyphicon-pencil"></i> 
+                        </button>
+                        <button class="to-transparent" ng-click="deleteBtn(vote.id)" data-toggle="tooltip" title="刪除投票">
+                            <i class="glyphicon glyphicon-trash"></i> 
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+       
+    </div>
+</div>
+<script type="text/javascript">
+    // 提示工具
+    $(function () { $("[data-toggle='tooltip']").tooltip(); });
+</script>
+</body>
+
+</html>

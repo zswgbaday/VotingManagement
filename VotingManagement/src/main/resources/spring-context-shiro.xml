@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- SecurityManager配置 -->
+    <!-- 配置Realm域 -->
+    <!-- 密码比较器 -->
+    <!-- 配置缓存：ehcache缓存 -->
+
+    <!-- 安全管理 -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <!-- 引用自定义的realm -->
+        <property name="realm" ref="authRealm"/>
+        <!-- 缓存 -->
+        <property name="cacheManager" ref="shiroEhcacheManager"/>
+    </bean>
+
+    <!-- 自定义权限认证 -->
+    <bean id="authRealm" class="com.zsw.service.shiro.AuthRealm"></bean>
+
+    <!--自定义过滤器-->
+    <bean id="permission" class="com.zsw.service.shiro.filter.PermissionFilter"/>
+    <bean id="simpleAuth" class="com.zsw.service.shiro.filter.SimpleAuthFilter"/>
+    <!--<bean id="kickOut" class="com.zsw.service.shiro.filter.KickOutFilter"/>-->
+
+    <!-- filter-name这个名字的值来自于web.xml中filter的名字 -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <!-- 注入安全管理器 -->
+        <property name="securityManager" ref="securityManager"/>
+        <!--登录页面  -->
+        <property name="loginUrl" value="/views/login/login.html"></property>
+        <!-- 登录成功后 -->
+        <property name="successUrl" value="/home.action"></property>
+        <!-- 权限不足提示页面 -->
+        <property name="unauthorizedUrl" value="/views/unauth/unauth.html"/>
+        <!-- URL拦截规则 -->  <!-- 有先后顺序 从上往下匹配 -->
+        <property name="filterChainDefinitions">
+            <!-- /**代表下面的多级目录也过滤,
+                anon:可以匿名使用。
+                authc:需要认证(登录)才能使用
+                roles:可以带参数, 参数可以多个,例如roles["admin,guest"], 表示每个参数都通过才算通过
+                perms:可以带参数, 参数可以多个,perms["user:add:*,user:modify:*"]
+                port:port[8081]表示当请求的url的端口不是8081时跳转到schema://serverName:8081?queryParams
+                user:必须存在用户，登录操作时不做检查
+             -->
+            <value>
+                <!--主页|登录页|等-->
+                /index* = anon
+                /login* = anon
+                /test* = anon
+                <!--开放的接口-->
+                /vote/find-vote-by-id* = anon
+                /vote/find-votes-page* = anon
+                <!-- 静态资源不用拦截，我已经全部放开了-->
+                /css/** = anon
+                /images/** = anon
+                /image/** = anon
+                /js/** = anon
+                /font/** = anon
+                /img/** = anon
+                /views/** = anon
+                <!--/make/** = anon-->
+                <!--/skin/** = anon-->
+                <!--/stat/** = anon-->
+                <!--/ufiles/** = anon-->
+                <!--/validator/** = anon-->
+                <!--/** = simpleAuth,authc-->
+                <!--/*.* = simpleAuth,authc-->
+            </value>
+        </property>
+    </bean>
+
+    <!-- 用户授权/认证信息Cache, 采用EhCache  缓存 -->
+    <bean id="shiroEhcacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <property name="cacheManagerConfigFile" value="classpath:ehcache-shiro.xml"/>
+    </bean>
+
+    <!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+
+    <!-- 生成代理，通过代理进行控制 -->
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+          depends-on="lifecycleBeanPostProcessor">
+        <property name="proxyTargetClass" value="true"/>
+    </bean>
+
+    <!-- 安全管理器 -->
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
+
+</beans>

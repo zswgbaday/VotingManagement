@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zsw.dao.mappers.RoleMapper">
+    
+
+    <resultMap id="roleResultMap" type="com.zsw.pojo.role.Role" >
+        <id column="role_id" property="id" jdbcType="NUMERIC" javaType="Integer"></id>
+        <result column="name" property="name" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="icon" property="icon" jdbcType="VARCHAR" javaType="String"></result>
+        <association property="resources" 
+                     column="roleId=id"
+                     javaType="list"
+                     select="com.zsw.dao.mappers.ResourcesMapper.findResourcesByRoleId" ></association>
+    </resultMap>
+    
+    <sql id="roleCol">
+        id, name, icon
+    </sql>
+    
+    <select id="findRoleByRoleId" resultMap="roleResultMap" >
+        select 
+         <include refid="roleCol" />
+        from v_role role where id = #{roleId} 
+    </select>
+    
+    <select id="findRolesByUserId" resultMap="roleResultMap" >
+        select 
+        <include refid="roleCol"/>
+        from v_relation_user_role relation inner join v_role role on relation.role_id = role.id
+        where relation.user_id = #{userId}
+    </select>
+    
+    <delete id="deleteRelationUserByUserId" flushCache="true" parameterType="String">
+        delete from v_relation_user_role relation 
+        where relation.user_id = #{userId}
+    </delete>
+
+</mapper>

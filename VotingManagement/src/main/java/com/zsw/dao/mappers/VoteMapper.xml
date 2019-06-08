@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zsw.dao.mappers.VoteMapper">
+
+    <resultMap id="voteResultMap" type="com.zsw.pojo.vote.Vote" >
+        <id column="id" property="id" jdbcType="VARCHAR" javaType="String"></id>
+        <result column="status_" property="status" typeHandler="com.zsw.dao.typehandler.VoteStatusTypeHandler"></result>
+        <result column="stop_time" property="stopTime" jdbcType="TIMESTAMP" javaType="java.sql.Timestamp"></result>
+        <!--voteContent-->
+        <result column="id" property="voteContent.id" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="title" property="voteContent.title" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="describe_" property="voteContent.describe" jdbcType="CLOB" javaType="String" typeHandler="org.apache.ibatis.type.ClobTypeHandler"></result>
+        <!--照片  typeHandler="org.apache.ibatis.type.BlobTypeHandler" -->
+        <result column="image" property="voteContent.image" jdbcType="BLOB"  typeHandler="org.apache.ibatis.type.BlobTypeHandler"></result>
+        <result column="type" property="voteContent.type" typeHandler="com.zsw.dao.typehandler.VoteTypeTypeHandler"></result>
+        <result column="options" property="voteContent.options" jdbcType="CLOB" typeHandler="com.zsw.dao.typehandler.VoteOptionsTypeHandler"></result>
+        <!--通用属性-->
+        <result column="create_by_id" property="createById" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="create_by_name" property="createByName" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" javaType="java.sql.Timestamp"></result>
+    </resultMap>
+    
+    <sql id="voteCol" >
+        id, status_ , stop_time, title, describe_ , image, type, options, create_by_id, create_by_Name, create_time
+    </sql>
+    
+    <insert id="insertNewVote" parameterType="com.zsw.pojo.vote.Vote"  >
+        insert into v_vote (
+            id, status_, stop_time, 
+            title, describe_, image, type, options,
+            create_by_id, create_by_name, create_time )
+        values (#{id}, #{status,typeHandler=com.zsw.dao.typehandler.VoteStatusTypeHandler}, #{stopTime},
+                #{voteContent.title}, #{voteContent.describe, typeHandler=org.apache.ibatis.type.ClobTypeHandler}, #{voteContent.image, jdbcType=BLOB},
+                #{voteContent.type,typeHandler=com.zsw.dao.typehandler.VoteTypeTypeHandler}, #{voteContent.options,typeHandler=com.zsw.dao.typehandler.VoteOptionsTypeHandler},
+                   #{createById}, #{createByName}, now() )
+    </insert>
+    
+    <!--只能修改vote, 不能修改VoteContent不然别人已经投票了,你还改,那就出错了-->
+    <update id="updateVoteStatus" >
+        update v_vote set 
+        <if test="status != null" >
+            status_ = #{status, typeHandler=com.zsw.dao.typehandler.VoteStatusTypeHandler},
+        </if>
+        <if test="stopTime != null" >
+            stop_time = #{stopTime} ,
+        </if>
+        <if test="title != null">
+            title = #{title} ,
+        </if>
+        create_time = create_time where id = #{id}
+    </update>
+     
+    <select id="findVoteByUserId" parameterType="String" resultMap="voteResultMap" >
+        select  <include refid="voteCol"/> from v_vote where create_by_id = #{userId}
+    </select>
+    
+    <select id="findVoteWithPage" parameterType="com.zsw.web.controller.command.FindVoteCommand" resultMap="voteResultMap">
+        select <include refid="voteCol"/> from v_vote
+        where 1 = 1
+              <foreach collection="keyWords" item="keyWord" separator="or" open="AND" >
+                  title like concat("%",#{keyWord},"%")
+              </foreach>
+        limit #{offset}, #{size} 
+    </select>
+    
+    <select id="findVoteById" parameterType="String" resultMap="voteResultMap">
+        select <include refid="voteCol" /> from v_vote where id = #{voteId}
+    </select>
+    
+    <!--用于更新投票数量-->
+    <update id="updateVoteResult" >
+        update v_vote set options = #{options} where id = #{voteId}
+    </update>
+    <select id="findVoteResultById" parameterType="String" resultType="String">
+        select options from v_vote where id = #{id}
+    </select>
+    
+    <!--上传图片-->
+    <update id="setPhotoById">
+        update v_vote set image = #{image, typeHandler=org.apache.ibatis.type.BlobTypeHandler} where id = #{id}
+    </update>
+    
+    <select id="getPhotoById" parameterType="String" resultMap="voteResultMap">
+        select <include refid="voteCol"/> from v_vote where id = #{id}
+    </select>
+    
+    <delete id="deleteVoteById" parameterType="String">
+        delete from v_vote where id = #{id}
+    </delete>
+    
+    
+    
+    
+    
+    
+    
+</mapper>
+
+<!--
+statementType=”STATEMENT”
+取值说明： 
+1、STATEMENT:直接操作sql，不进行预编译，获取数据：$—Statement 
+2、PREPARED:预处理，参数，进行预编译，获取数据：#—–PreparedStatement:默认 
+3、CALLABLE:执行存储过程————CallableStatement 
+
+
+
+-->
