@@ -1,5 +1,7 @@
 package com.zsw.service.shiro;
 
+import com.zsw.common.enums.ResourcesStatus;
+import com.zsw.common.enums.RoleType;
 import com.zsw.common.util.Encrypt;
 import com.zsw.pojo.role.Resources;
 import com.zsw.pojo.role.Role;
@@ -17,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -50,27 +53,27 @@ public class AuthRealm extends AuthorizingRealm {
         User user = (User) pc.getPrimaryPrincipal();
         //根据realm得到相应的身份验证      因为可以自定义多个realm，而pc中就是获取这多个realm，如果只定义了一个realm，那么用两种方法是一样的。
 //        User user = (User) pc.fromRealm(this.getName()).iterator().next();  // 根据realm名字找到对应的realm
-        Set<Role> roles = getUserPermission(user);
-//        user.setRole(roles);
-//
-//        List<String> permissions = new ArrayList<String>();
-//
-//        Set<Role> roles = user.getRoles();
-//        for (Role role : roles) {
-//            Set<Module> modules = role.getModules();
-//            for (Module module : modules) {
-//                permissions.add(module.getName());
-//            }
-//        }
-//
-        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-        info.setStringPermissions(getUrlByRoleSet(roles));     // 添加该用户的所有可访问的url
-        if (user.getEmail().equalsIgnoreCase("root")) {
-            info.addRole("superAdmin");
-        }else {
-            info.addRoles(roles.stream().map(role -> role.getName()).collect(Collectors.toList()));
-        }
 
+        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+        Set<String> roles = null;
+        Set<String> resources = null;
+        if (user.getEmail().equalsIgnoreCase("root")) {
+            //对超级管理员，所有权限都开放
+            info.addRole(RoleType.SUPERADMIN.name());
+            roles = new HashSet<>();
+            resources = new HashSet<>();
+        }else {
+            //查询管理员以外的用户角色和资源
+            Set<Role> userRoles = getRolesByUser(user);
+            roles = userRoles.stream().map(role -> role.getName()).collect(Collectors.toSet());
+            resources = getUrlByRoleSet(userRoles);
+        }
+        
+        //为用户添加角色, shiro中一个用户只能有一个角色吗
+//        info.addRole(roles);
+        info.setStringPermissions(roles);
+        //为用户添加权限
+        info.setStringPermissions(resources);
         log.debug("用户{}授权成功", user.getName());
 
         return info;
@@ -96,15 +99,29 @@ public class AuthRealm extends AuthorizingRealm {
 
         return info;
     }
-    
-    private Set<Role> getUserPermission(User user) {
+
+    /**
+     * 根据用户获得用户角色
+     * @param user
+     * @return
+     */
+    private Set<Role> getRolesByUser(User user) {
         return roleService.getRolesByUser(user);
         
     }
-    
+
+    /**
+     * 根据角色获取权限
+     * @param roles
+     * @return
+     */
     private Set<String> getUrlByRoleSet(Collection<Role> roles) {
         List<Resources> resourcesList = resourcesService.getResourcesByRoles(roles);
-        return resourcesList.stream().map(res -> res.getUrl()).collect(Collectors.toSet());
+        return resourcesList.stream().filter(res -> {
+                //赋予权限之前，过滤掉停用的权限
+                    return res.getStatus() == ResourcesStatus.ACTIVE;
+                }
+        ).map(res -> res.getUrl()).collect(Collectors.toSet());
     }
 
 }

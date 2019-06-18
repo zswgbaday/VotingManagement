@@ -57,25 +57,33 @@
                 <!--主页|登录页|等-->
                 /index* = anon
                 /login* = anon
+                /register* = anon
+                /unauth* = anon
+                /logout* = anon
+                / = anon
+                
+                /check-login* = anon
+                
                 /test* = anon
-                <!--开放的接口-->
+                <!--对游客开放的接口-->
                 /vote/find-vote-by-id* = anon
                 /vote/find-votes-page* = anon
+                /vote/show-photo/* = anon
+                /vote/do-vote* = anon
+                /user/create-new-user* = anon
+                /check-login* = anon
                 <!-- 静态资源不用拦截，我已经全部放开了-->
                 /css/** = anon
                 /images/** = anon
                 /image/** = anon
                 /js/** = anon
                 /font/** = anon
+                /fonts/** = anon
                 /img/** = anon
                 /views/** = anon
-                <!--/make/** = anon-->
-                <!--/skin/** = anon-->
-                <!--/stat/** = anon-->
-                <!--/ufiles/** = anon-->
-                <!--/validator/** = anon-->
-                <!--/** = simpleAuth,authc-->
-                <!--/*.* = simpleAuth,authc-->
+                <!--/validator/** = authc  // 这个是shiro自带的权限验证过滤器-->
+                /** = simpleAuth,permission
+                /*.* = simpleAuth,permission
             </value>
         </property>
     </bean>

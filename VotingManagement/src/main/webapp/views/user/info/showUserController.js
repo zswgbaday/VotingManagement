@@ -14,7 +14,7 @@ angular
         
         //像后台请求获取user
         s.findUser = function () {
-            commonService._get('user/find-user',{}, function (res) {
+            commonService._get('user/get-user-info',{}, function (res) {
                s.user  = res.obj;
             }, function (err) {
                 commonService._modalAlert(false, err.msg);
@@ -98,7 +98,7 @@ angular
                     commonService._modalAlert(false, "上传头像失败", function () {
                     });
                 });
-            }else {
+     ++       }else {
                 commonService._modalAlert(false, "请选择图片");
             }
         };

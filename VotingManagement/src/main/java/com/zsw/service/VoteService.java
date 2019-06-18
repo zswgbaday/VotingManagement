@@ -83,6 +83,18 @@ public class VoteService {
         if (StringUtils.isBlank(id)) {
             throw new ServiceException("投票id不能为空");
         }
+        Vote thisVote = voteMapper.findVoteById(id);
+        //验证投票状态
+        if (thisVote.getStatus() == VoteStatus.DISABLE) {
+            throw new ServiceException("投票已经关闭，无法投票");
+        }
+        if (thisVote.getStopTime().getTime() <= System.currentTimeMillis()) {
+            if (thisVote.getStatus() != VoteStatus.DISABLE) {
+                voteMapper.updateVoteStatus(thisVote.getId(), VoteStatus.DISABLE, null, null);
+            }
+            throw new ServiceException("投票已经到期，若要投票请联系发起者修改投票截至时间");
+        }
+        //唉，写不动了，瞎写吧
         String options = voteMapper.findVoteResultById(id);
         if ( StringUtils.isBlank(options)) {
             throw new ServiceException("没有id为{}的投票, 请刷新后重新投票", id);

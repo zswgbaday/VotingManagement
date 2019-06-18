@@ -1,0 +1,36 @@
+<div class="container-fluid m-5">
+    <div class="row">
+        <div class="col-md-10 "><span class="font-size-9 ">查看橘色信息</span></div>
+        <!--<div class="col-md-10 "><span class="font-size-9">您的到来</span></div>-->
+    </div>
+    <!--内容-->
+    <div class="row mt-2 mb-2" style="min-height: 100px">
+        <!--<div class="col-md-8 col-md-offset-2">-->
+            <!--<span class="font-size-5">{{msg}}</span>-->
+        <!--</div>-->
+        <ul class="list-group">
+            <li class="list-group-item">
+                <strong>角色ID</strong>
+                <input class="form-control" ng-model="role.id" disabled/>
+            </li>
+            <li class="list-group-item">
+                <strong>角色名称</strong>
+                <input class="form-control" ng-model="role.name" />
+            </li>
+            <li class="list-group-item">
+                <strong>角色图标</strong>
+                <input class="form-control" ng-model="role.icon" />
+            </li>
+        </ul>
+    </div>
+    <!--底部按钮-->
+    <div class="row">
+        <div class="col-md-4 ">
+            <button class="btn btn-primary grid-width-100"  ng-click="ok()">OK</button>
+        </div>
+        <div class="col-md-4 ">
+            <button class="btn btn-primary grid-width-100"  ng-click="cancel()">CANCEL</button>
+        </div>
+       
+    </div>
+</div>

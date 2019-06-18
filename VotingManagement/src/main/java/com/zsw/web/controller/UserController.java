@@ -1,6 +1,7 @@
 package com.zsw.web.controller;
 
 import com.csvreader.CsvWriter;
+import com.zsw.common.enums.RoleType;
 import com.zsw.common.exception.ServiceException;
 import com.zsw.common.util.CsvUtil;
 import com.zsw.common.util.JSONUtil;
@@ -85,9 +86,9 @@ public class UserController extends BaseController {
         }
     }
 
-    @RequestMapping(value = "/delete-user/{userId}", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "/delete-user", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
     @ResponseBody
-    public Result deleteUser(@PathVariable("userId") String userId){
+    public Result deleteUser(@RequestParam("id") String userId){
         Result rs = new Result();
         if (StringUtils.isBlank(userId)) {
             rs.setSuccess(false);
@@ -118,13 +119,26 @@ public class UserController extends BaseController {
         return rs;
     }
 
+    @RequestMapping(value = "/find-user-by-id", produces = "application/json; charset=utf-8")
+    @ResponseBody
+    public Result findUserById (@RequestParam("id") String id) {
+        User user = null;
+        try {
+            user = userService.getUserById(id);
+        }catch (ServiceException e) {
+            return  renderError(e.getMessage(), null);
+        }
+        return  renderSuccess("查询用户信息成功", user);
+    }
+
     /**
      * 获取当前登录用户的信息
      */
-    @RequestMapping(value = "/find-user", produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "/get-user-info", produces = "application/json; charset=utf-8")
     @ResponseBody
     public Result findUser () {
         User login = (User) SecurityUtils.getSubject().getPrincipal();
+        SecurityUtils.getSubject().hasRole(RoleType.SUPERADMIN.name());
         if (login == null) {
             return renderError("用户未登录", null);
         }
@@ -132,6 +146,7 @@ public class UserController extends BaseController {
         try {
             user = userService.getUserById(login.getId());
         }catch (ServiceException e) {
+            e.printStackTrace();
             return  renderError(e.getMessage(), null);
         }
         return  renderSuccess("查询登录用户信息成功", user);
@@ -190,13 +205,19 @@ public class UserController extends BaseController {
      * 下载用户头像
      */
     @RequestMapping(value = "/show-photo")
-    public ResponseEntity<byte[]> showPhoto (HttpServletResponse resp) throws IOException {
-        Object obj = SecurityUtils.getSubject().getPrincipal();
-        if (obj == null) {
-            return new ResponseEntity<byte[]>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<byte[]> showPhoto (HttpServletResponse resp,
+                                             @RequestParam(value = "id", required = false) String id) throws IOException {
+        byte[] photo = null;
+        if (StringUtils.isBlank(id)) {
+            Object obj = SecurityUtils.getSubject().getPrincipal();
+            if (obj == null) {
+                return new ResponseEntity<byte[]>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+            }
+            String userId = ((User) obj).getId();
+            photo = userService.getPhotoById(userId);
+        }else {
+            photo = userService.getPhotoById(id);
         }
-        String userId = ((User) obj).getId();
-        byte[] photo = userService.getPhotoById(userId);
         
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.IMAGE_JPEG);

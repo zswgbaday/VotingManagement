@@ -42,11 +42,17 @@
         where email = #{loginEmail}
     </select>
     
-    <select id="selectUsersWithRule" parameterType="hashmap" resultMap="userResultMap" >
+    <select id="selectUsersWithRule" parameterType="com.zsw.web.controller.command.FindUsersByRuleCommand" resultMap="userResultMap" >
         select 
         <include refid="userCol" />
         from v_user
         where 1=1
+        <if test="name != null" >
+          and name like concat("%",#{name},"%")
+        </if>
+        <if test="email != null" >
+            and email like concat("%",#{email},"%")
+        </if>
         limit #{offset},#{size}
     </select>
     

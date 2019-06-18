@@ -232,7 +232,15 @@ angular
                 s.showType = true;
                 barCharts();
             }
-        }
+        };
+        
+        s.shareVote = function () {
+            var msg = "请问复制连接后分享\n" + 'http://localhost:8585/views/index/single-page.html' + location.search;
+            // input.value = "hello world"
+            // input.select()
+            // document.execCommand("copy")
+          commonService._modalAlert(true, msg);
+        };
 
         /********************************************/
         s.initFun()

@@ -1,6 +1,7 @@
 package com.zsw.service.shiro.filter;
 
 
+import com.zsw.common.enums.RoleType;
 import com.zsw.common.util.JSONUtil;
 import com.zsw.web.Result;
 import org.apache.commons.lang3.BooleanUtils;
@@ -10,6 +11,7 @@ import org.apache.shiro.web.filter.AccessControlFilter;
 import org.apache.shiro.web.util.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -38,7 +40,7 @@ public class PermissionFilter extends AccessControlFilter {
         log.debug("开始判断用户{}是否可访问资源{}", "someone", httpRequest.getRequestURI());
 
         //超级管理员角色
-        if (subject.hasRole("superAdmin")) {
+        if (subject.hasRole(RoleType.SUPERADMIN.name())) {
             return Boolean.TRUE;
         }
 
@@ -50,10 +52,12 @@ public class PermissionFilter extends AccessControlFilter {
         if (ShiroFilterUtil.isAjax(request)) {                  //Ajax请求就返回json
             log.debug("当前用户没有权限访问，并且是Ajax请求！");
 
-            Result result = new Result();
+            Result result = new Result();   
             result.setSuccess(false);
             result.setMsg("当前用户没有权限访问！");
+            result.setUri("/views/login/login.html");
 
+//            JSONUtil.outWithStatus(response, result, HttpStatus.UNAUTHORIZED.value());
             JSONUtil.out(response, result);
         }
         return Boolean.FALSE;

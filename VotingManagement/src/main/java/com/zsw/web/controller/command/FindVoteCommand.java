@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class FindVoteCommand {
@@ -11,6 +12,7 @@ public class FindVoteCommand {
     private Integer page;
     private Integer size;
     private String keyWord;
+    private Date createTime;
     
 
     public Integer getPage() {
@@ -57,5 +59,13 @@ public class FindVoteCommand {
 
     public void setKeyWord(String keyWord) {
         this.keyWord = keyWord;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

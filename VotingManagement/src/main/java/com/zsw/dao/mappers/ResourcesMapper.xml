@@ -18,10 +18,10 @@
         select
         <include refid="resourcesCol"/>
         from v_relation_role_res relation inner join v_resources res on relation.res_id = res.id
-        where relation.role_id = #{roleId}
+        where relation.role_id = #{roleId} 
     </select>
 
-    <select id="findResourcesByRoleIds" resultMap="resourcesResultMap">
+    <select id="findResourcesByRoleIds" resultMap="resourcesResultMap" parameterType="list">
         select
         <include refid="resourcesCol"/>
         from v_relation_role_res relation inner join v_resources res on relation.res_id = res.id
@@ -34,7 +34,39 @@
     <select id="findAllResources" resultMap="resourcesResultMap" >
         select * from v_resources 
     </select>
-
-
+    
+    <!--根据id查找资源-->
+    <select id="findResById" parameterType="Integer" resultMap="resourcesResultMap">
+        select <include refid="resourcesCol" /> from v_resources 
+        where id = #{id}
+    </select>
+    
+    <!--根据关键词擦找-->
+    <select id="findResourcesByKeyWord" parameterType="String" resultMap="resourcesResultMap">
+        select <include refid="resourcesCol"/> from v_resources
+        where 1 = 1
+        <!--<if test="keyWord != null">-->
+            and name like concat("%",#{keyWord},"%")
+        <!--</if>-->
+    </select>
+    
+    <!--创建资源-->
+    <insert id="insertNewRes" parameterType="com.zsw.pojo.role.Resources">
+        insert into v_resources(name, status, url, icon) values (#{name}, 
+         #{status, typeHandler=com.zsw.dao.typehandler.ResourcesStatuTypeHandler},
+         #{url}, #{icon, jdbcType=VARCHAR} )
+    </insert>
+    
+    <!--更新资源-->
+    <update id="updateRes" parameterType="com.zsw.pojo.role.Resources">
+        update v_resources set name = #{name}, status = #{status, typeHandler=com.zsw.dao.typehandler.ResourcesStatuTypeHandler},
+                               url = #{url}, icon = #{icon, jdbcType=VARCHAR}
+        where id = #{id}
+    </update>
+    
+    <!--删除资源-->
+    <delete id="deleteRes" parameterType="Integer">
+        delete from v_resources where id = #{id}
+    </delete>
 
 </mapper>

@@ -1,0 +1,55 @@
+<div class="container-fluid m-5">
+    <div class="row">
+        <div class="col-md-10 "><span class="font-size-9 ">编辑角色资源列表</span></div>
+        <!--<div class="col-md-10 "><span class="font-size-9">您的到来</span></div>-->
+    </div>
+    <!--内容-->
+    <div class="row mt-2 mb-2" style="height: 350px; overflow:scroll; ">
+        <!--<div class="col-md-8 col-md-offset-2">-->
+        <!--<span class="font-size-5">{{msg}}</span>-->
+        <!--</div>-->
+        <style>
+            .table td{
+                padding: 0px 8px !important; vertical-align: middle !important;
+            }
+        </style>
+        <table class="table" >
+            <thead>
+            <tr>
+                <th>选 择</th>
+                <th>资源名称</th>
+                <th>资源状态</th>
+                <th>资源路径</th>
+                <th>资源图标</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="res in resArrays">
+                <td>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox"  ng-model="res.selected"/>
+                        </label>
+                    </div>
+                </td>
+                <td>{{res.name}}</td>
+                <td>{{resStatus[res.status].name}}</td>
+                <td>{{res.url}}</td>
+                <td>{{res.icon || "暂无图标"}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<!--底部按钮-->
+<div class="row">
+    <div class="col-md-4 ">
+        <button class="btn btn-primary grid-width-100" ng-click="ok()">更新资源</button>
+    </div>
+    <div class="col-md-4 ">
+        <button class="btn btn-default grid-width-100" ng-click="cancel()">取消更新</button>
+    </div>
+
+</div>
+</div>

@@ -9,15 +9,23 @@ import java.util.List;
 
 public interface RoleMapper {
 
-    @Select("select r.* from v_resources r inner join v_user u on r.role_id = u.role_id where u.id = #{userId} ")
-    List<Role> findRoleByUserId(@Param("userId") String userId);
-    
+//    @Select("select r.* from v_resources r inner join v_user u on r.role_id = u.role_id where u.id = #{userId} ")
+//    List<Role> findRoleByUserId(@Param("userId") String userId);
+
     Role findRoleByRoleId(@Param("roleId") Integer roleId);
-    
+
     List<Role> findRolesByUserId(String userId);
-    
+
     @Select("select * from v_resources")
     List<Role> findAll();
 
     Integer deleteRelationUserByUserId(String userId);
+
+    Integer insertNewRole(Role role);
+    
+    Integer updateRole(Role role);
+
+    Integer deletRole(Integer id);
+
+    List<Role> findRoles(@Param("page") Integer page,@Param("size") Integer size,@Param("keyWord") String keyWord);
 }

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zsw.dao.mappers.RoleResMapper">
+    
+    <resultMap id="RoleResResultMap" type="com.zsw.pojo.role.RoleRes" >
+        <result column="res_id" property="resId" jdbcType="NUMERIC"></result>
+        <result column="role_id" property="roleId" jdbcType="NUMERIC"></result>
+    </resultMap>
+    
+    <sql id="RoleResCol">
+        res_id, role_id
+    </sql>
+
+    <select id="findByRoleId" parameterType="Integer" resultMap="RoleResResultMap">
+        select <include refid="RoleResCol"/> from v_relation_role_res
+        where role_id = #{id}
+    </select>
+
+    <select id="findByResId" parameterType="Integer" resultMap="RoleResResultMap">
+        select <include refid="RoleResCol"/> from v_relation_role_res
+        where res_id = #{id}
+    </select>
+    
+    <delete id="delete" >
+        delete from v_relation_role_res 
+        where 1 = 1
+        <if test="roleId != null" >
+        and role_id = #{roleId}
+        </if>
+        <if test="resId != null" >
+        and res_id = #{resId}
+        </if>
+    </delete>
+    
+    <insert id="insert" >
+        insert into v_relation_role_res (role_id, res_id) values(#{roleId}, #{resId})
+    </insert>
+
+
+
+</mapper>

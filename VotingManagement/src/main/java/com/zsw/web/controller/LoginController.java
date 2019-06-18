@@ -1,9 +1,11 @@
 package com.zsw.web.controller;
 
 import com.zsw.common.util.Encrypt;
+import com.zsw.common.util.JSONUtil;
 import com.zsw.pojo.user.User;
 import com.zsw.web.Result;
 import com.zsw.web.controller.base.BaseController;
+import com.zsw.web.controller.command.CreateNewUserCommand;
 import com.zsw.web.controller.command.CreateNewVoteCommand;
 import com.zsw.web.controller.command.DoLoginCommand;
 import org.apache.commons.lang3.StringUtils;
@@ -20,6 +22,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @Controller
 public class LoginController extends BaseController {
@@ -78,7 +85,7 @@ public class LoginController extends BaseController {
      */
     @RequestMapping(value = "/unauth")
     public String nuAuthPage(){
-        return "/unauth/unauth";
+        return "/views/unauth/unauth.html";
     }
 
     /**
@@ -89,14 +96,31 @@ public class LoginController extends BaseController {
         return rediPage("views/index/index.html");
     }
 
+    @RequestMapping(value = "admin-index")
+    public String toAdminIndex() {
+        return rediPage("views/root/home.html");
+    }
+
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String register() {
-        return rediPage("login/register.html");
+        return rediPage("views/login/register.html");
     }
     
     @RequestMapping(value = "/register", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
-    public String doLogin(@RequestBody CreateNewVoteCommand command) {
-        return forwPage("user/create-new-user");
+//    public String toRegister(@RequestBody CreateNewUserCommand command) {
+//        return forwPage("user/create-new-user");
+//    }
+    public void toRegister(HttpServletRequest req, HttpServletResponse resp) {
+
+        try {
+            req.getRequestDispatcher("user/create-new-user").forward(req, resp);
+        } catch (ServletException e) {
+            e.printStackTrace();
+            JSONUtil.out(resp, renderError(e.getMessage(), null));
+        } catch (IOException e) {
+            e.printStackTrace();
+            JSONUtil.out(resp, renderError(e.getMessage(), null));
+        }
     }
 
     /**
@@ -112,7 +136,7 @@ public class LoginController extends BaseController {
         return rediPage("login");
     }
     
-    @RequestMapping(value = "/get-user-info", produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "/is-login", produces = "application/json; charset=utf-8")
     @ResponseBody
     public Result getUserInfo () {
         Subject login = SecurityUtils.getSubject();

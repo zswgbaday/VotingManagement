@@ -35,7 +35,9 @@ function commonService($http, $uibModal) {
             if (param && JSON.stringify(param) != "{}") {
                 url += '?';
                 for (var i in param) {
-                    url += i + '=' + param[i] + '&';
+                    // if (! param[i]) {
+                        url += i + '=' + param[i] + '&';
+                    // }
                 }
                 url = url.substr(0, url.length - 1);
             }

@@ -1,5 +1,6 @@
 package com.zsw.service;
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import com.zsw.common.exception.ServiceException;
 import com.zsw.common.util.Encrypt;
 import com.zsw.common.util.Uuid;
@@ -49,10 +50,13 @@ public class UserService {
      * 新建用户
      */
     public User createNewUser(String username, String password, String email, Integer age, String address, String phone) {
-        User user = new User(Uuid.getUUID32(), username, password, phone, age, address, email, null, null);
+        User user = new User(Uuid.getUUID32(), username, Encrypt.MD5(password), phone, age, address, email, null, null);
         Integer rs = userMapper.insertNewUser(user);
         if (rs != 0) {
-            return user;
+            if (roleService.insertUserRole(user.getId(), 1)) {
+                return user;
+            }
+            return null;
         }else {
 //            throw new ServiceException("新增用户失败");
             return null;

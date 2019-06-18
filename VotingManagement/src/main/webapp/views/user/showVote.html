@@ -17,7 +17,7 @@
     <!--此页面配套的js-->
     <script src="showVoteController.js"></script>
 </head>
-<body ng-app="VotingApp" ng-controller="showVoteController">
+<body ng-app="VotingApp" ng-controller="showVoteController" style="padding-top:70px">
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -26,7 +26,7 @@
         <div class="navbar-header" style="display:none">
             <a class="navbar-brand" href="javascript:void(0)" onclick="location.reload()">个人空间</a>
         </div>
-        <div style="display:none">
+        <div >
             <ul class="nav navbar-nav">
                 <!--class="active"-->
                 <li ><a href="/views/user/info/showUser.html">个人信息</a></li>
@@ -66,7 +66,8 @@
     <div class="row-fluid">
         <!--投票信息显示-->
         <div class="col-md-6">
-            <h3>投票</h3>
+            <h3>投票 <button class="btn btn-add pull-right" ng-click="shareVote()">分享</button></h3>
+            
             <ul class="list-group">
                 <li class="list-group-item">
                     <strong>投票标题</strong>
@@ -77,6 +78,14 @@
                     <div class="panel panel-default">
                         <div class="panel-body">
                             {{vote.voteContent.describe}}
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <strong>投票图片描述</strong>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <img src="/vote/show-photo/{{urlVoteId}}" title="banner1" height="400px"/>
                         </div>
                     </div>
                 </li>

@@ -42,7 +42,7 @@ angular
         };
         
         s.checkLogin = function () {
-            commonService._get('get-user-info',{}, function (res) {
+            commonService._get('user/get-user-info',{}, function (res) {
                 if (res.success = true) {
                     window.location.href = "/views/user/home.html";
                 }
@@ -52,5 +52,5 @@ angular
         };
         
         /***************初始化操作************/
-        s.checkLogin();
+        // s.checkLogin();
     });

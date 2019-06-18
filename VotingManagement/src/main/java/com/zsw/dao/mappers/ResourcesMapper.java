@@ -12,7 +12,16 @@ public interface ResourcesMapper {
     
     List<Resources> findResourcesByRoleId(Integer roleId);
 
-    List<Resources> findResourcesByRoleIds(List<Integer> roleIds);
+    List<Resources> findResourcesByRoleIds(@Param("roleIds") List<Integer> roleIds);
+
+
+    Integer insertNewRes(Resources res);
     
+    Integer updateRes(Resources res);
     
+    Integer deleteRes(Integer id);
+
+    Resources findResById(Integer id);
+
+    List<Resources> findResourcesByKeyWord(String keyWord);
 }

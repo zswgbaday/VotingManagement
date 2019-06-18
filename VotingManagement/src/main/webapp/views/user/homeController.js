@@ -10,9 +10,9 @@ angular
                 name: "单选",
                 type : "radio"
             },
-            Multiple: {
+            multiple: {
                 name: "多选",
-                type : "Multiple"
+                type : "multiple"
             },
             // text: {
             //     name: "文字",
@@ -25,7 +25,7 @@ angular
         
         //得到用户信息
         s.getUserInfo = function () {
-            commonService._get('get-user-info', null, function (res) {
+            commonService._get('user/get-user-info', null, function (res) {
                 s.loginUser = res.obj;
                 //加载投票信息
                 s.getVoteByUser();
@@ -94,7 +94,7 @@ angular
                             },
                             function (err) {
                                 console.log(err);
-                                commonService._modalAlert(res.success, res.msg);
+                                commonService._modalAlert(err.success, err.msg);
                             });
                         $uibModalInstance.close("ok");  //括号内是传递给回调函数的参数
                     };

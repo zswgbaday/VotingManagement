@@ -105,7 +105,7 @@ angular
                         formData.append("id", res.obj.id);
                         commonService._upLoadImage('vote/upload-photo', formData, function (ress) {
                             commonService._modalAlert(false, "创建投票成功", function () {
-                                window.location.href = "/views/user/showVote.html?id=" + ress.obj.id;
+                                window.location.href = "/views/user/showVote.html?id=" + res.obj.id;
                             });
                         }, function (errr) {
                             commonService._modalAlert(false, "图片上传失败", function () {
@@ -119,7 +119,7 @@ angular
                         });
                     }
                 },function (err) {
-                commonService._modalAlert(res.success, res.msg);
+                commonService._modalAlert(err.success, err.msg);
                 console.log(err);
             });
         };

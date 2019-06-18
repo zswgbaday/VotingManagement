@@ -4,7 +4,7 @@
     
 
     <resultMap id="roleResultMap" type="com.zsw.pojo.role.Role" >
-        <id column="role_id" property="id" jdbcType="NUMERIC" javaType="Integer"></id>
+        <id column="id" property="id" jdbcType="NUMERIC" javaType="Integer"></id>
         <result column="name" property="name" jdbcType="VARCHAR" javaType="String"></result>
         <result column="icon" property="icon" jdbcType="VARCHAR" javaType="String"></result>
         <association property="resources" 
@@ -30,9 +30,41 @@
         where relation.user_id = #{userId}
     </select>
     
+    <!--查询所有role-->
+    <select id="findRoles" resultMap="roleResultMap">
+    <bind name="offsetNum" value="(page - 1) * size"></bind>
+        select <include refid="roleCol"/> from v_role
+        <if test="keyWord != null">
+            where name like concat("%",#{keyWord},"%")
+        </if>
+        limit #{offsetNum} , #{size}
+    </select>
+    
     <delete id="deleteRelationUserByUserId" flushCache="true" parameterType="String">
-        delete from v_relation_user_role relation 
-        where relation.user_id = #{userId}
+        delete from v_relation_user_role
+        where v_relation_user_role.user_id = #{userId}
     </delete>
-
+    
+    <!--创建新角色-->
+    <insert id="insertNewRole" parameterType="com.zsw.pojo.role.Role">
+        insert into v_role(name, icon) values(#{name}, #{icon, jdbcType=VARCHAR})
+    </insert>
+    
+    <!--更新角色-->
+    <update id="updateRole" parameterType="com.zsw.pojo.role.Role">
+        update v_role set id = id
+        <if test="name != null">
+            , name = #{name}
+        </if>
+        <if test="icon != null">
+            , icon = #{icon, jdbcType=VARCHAR}
+        </if>
+        where id = #{id}
+    </update>
+    
+    <!--删除角色-->
+    <delete id="deletRole" parameterType="Integer">
+        delete from v_role where id = #{id}
+    </delete>
+    
 </mapper>

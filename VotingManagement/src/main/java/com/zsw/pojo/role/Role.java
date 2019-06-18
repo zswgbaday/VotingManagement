@@ -12,6 +12,12 @@ public class Role {
     private String name;
     private String icon;
 
+    /**
+     * 角色对应的资源列表
+     */
+    private Set<Resources> resources;
+    
+
     public Role(int id, String name, String icon, Set<Resources> resources) {
         this.id = id;
         this.name = name;
@@ -22,10 +28,7 @@ public class Role {
     public Role() {
     }
 
-    /**
-     * 角色对应的资源列表
-     */
-    private Set<Resources> resources;
+    
 
     public int getId() {
         return id;

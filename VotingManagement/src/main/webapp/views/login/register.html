@@ -29,7 +29,12 @@
         <div class="login-form" ng-init="user={}">
 
             <div class="control-group">
-                <input type="text" class="login-field" value="" placeholder="用户名" id="register-email" ng-model="user.username">
+                <input type="text" class="login-field" value="" placeholder="登录邮箱" id="register-email" ng-model="user.email">
+                <!--<label class="login-field-icon fui-user" for="login-name"></label>-->
+            </div>
+            
+            <div class="control-group">
+                <input type="text" class="login-field" value="" placeholder="用户名" id="register-name" ng-model="user.username">
                 <!--<label class="login-field-icon fui-user" for="login-name"></label>-->
             </div>
 
@@ -57,7 +62,7 @@
                 <!--<label class="login-field-icon fui-lock" for="login-pass"></label>-->
             </div>
 
-            <a class="btn btn-primary btn-large btn-block" id="log-btn" ng-click="doLogin(username, password)">注册</a>
+            <a class="btn btn-primary btn-large btn-block" id="log-btn" ng-click="doRegister()">注册</a>
             <a class="login-link" href="/login">已有账号?</a>
         </div>
     </div>
